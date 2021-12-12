@@ -18,8 +18,8 @@ A portable Java library for WebAuthn server side verification.
 Unofficial Spring Security extension for WebAuthn 
 {{% /blocks/feature %}}
 
-{{% blocks/feature icon="fa-landmark" title="Epub Konjac" url="https://github.com/ynojima/epub-konjac" %}}
-an utility to translate epub books
+{{% blocks/feature icon="fa-landmark" title="Epub Translator" url="https://github.com/sharplab/epub-translator" %}}
+An utility to translate epub books
 {{% /blocks/feature %}}
 
 {{< /blocks/section >}}
