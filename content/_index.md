@@ -14,15 +14,6 @@ Projects and memorandum are posted occasionally.
     <div class="row features">
         <div class="col-lg-4 mb-5 mb-lg-0 text-center ">
             <div class="mb-4 h1">
-                <i class="fas fa-rss-square"></i>
-            </div>
-            <h4 class="h3">Blog</h4>
-            <p class="mb-0"></p><p>Memorandums are posted here.</p>
-            <p></p>
-            <p><a href="/blog/">Read more …</a></p>
-        </div>
-        <div class="col-lg-4 mb-5 mb-lg-0 text-center ">
-            <div class="mb-4 h1">
                 <i class="fas fa-landmark"></i>
             </div>
             <h4 class="h3">Projects</h4>
@@ -38,6 +29,15 @@ Projects and memorandum are posted occasionally.
             <p class="mb-0"></p><p>Slides are posted on SpeakerDeck.</p>
             <p></p>
             <p><a href="https://speakerdeck.com/ynojima">Read more …</a></p>
+        </div>
+        <div class="col-lg-4 mb-5 mb-lg-0 text-center ">
+            <div class="mb-4 h1">
+                <i class="fas fa-rss-square"></i>
+            </div>
+            <h4 class="h3">Blog</h4>
+            <p class="mb-0"></p><p>Memorandums are posted here.</p>
+            <p></p>
+            <p><a href="/blog/">Read more …</a></p>
         </div>
     </div>
 </div>
