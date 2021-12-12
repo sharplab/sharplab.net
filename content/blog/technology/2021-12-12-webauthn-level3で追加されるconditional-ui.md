@@ -1,6 +1,6 @@
 ---
 layout: blog
-date: 2021-12-12T00:29:01.626Z
+date: 2021-12-22T00:29:01.626Z
 title: WebAuthn Level3で追加されるConditional UI
 ---
 [Digital Identity技術勉強会 #iddance Advent Calendar 2021](https://qiita.com/advent-calendar/2021/iddance) 22日目の記事です。今回は、WebAuthn Level3で追加に向けて仕様策定が進められている、Conditional UIについて紹介します。なお、iddance Advent Calendarの他に、他にも[Quarkus翻訳Advent Calendar](https://qiita.com/advent-calendar/2021/quarkusio)も書いてますので興味がある方はそちらもご覧ください。
