@@ -2,6 +2,7 @@
 layout: blog
 date: 2021-12-22T00:29:01.626Z
 title: WebAuthn Level3で追加されるConditional UI
+thumbnail: ""
 ---
 [Digital Identity技術勉強会 #iddance Advent Calendar 2021](https://qiita.com/advent-calendar/2021/iddance) 22日目の記事です。今回は、WebAuthn Level3で追加に向けて仕様策定が進められている、Conditional UIについて紹介します。なお、iddance Advent Calendarの他に、他にも[Quarkus翻訳Advent Calendar](https://qiita.com/advent-calendar/2021/quarkusio)も書いてますので興味がある方はそちらもご覧ください。
 
@@ -10,6 +11,10 @@ title: WebAuthn Level3で追加されるConditional UI
 WebAuthnは、サイレントに利用可能なクレデンシャルの一覧をRelying Partyが取得することは出来ないAPI設計となっています。これは、フィンガープリンティングを防止し、ユーザーのプライバシーを担保するために必要な制約ですが、一方で、利用可能なクレデンシャルが存在するかどうかも分からないのに、ユーザー操作に割り込む認証用モーダルダイアログの表示をRelying Partyに強いることになり、Relying Partyのユーザー体験は大きく損なわれています。
 
 利用可能なクレデンシャルが存在する場合だけWebAuthnの利用をユーザーに提示したい、でもユーザーのプライバシーは担保したい、という要求を実現する為に、WebAuthn Level3では、モーダルダイアログの代わりに、ユーザー名（＝利用可能なクレデンシャル）の一覧をフォームのinput要素のオートフィルのリストとして表示するモードの追加が計画されており、これがConditional UIと呼ばれている機能です。
+
+![Conditional UI](/img/conditional-ui.png)
+
+Conditional UIのイメージ（[Explainer: WebAuthn Conditional UI](https://docs.google.com/document/d/11hWpUPAnblPtkn1f7AIQW0ujoiu_BAKzlMVhZKQPiW8/edit#heading=h.7nki9mck5t64)より）
 
 APIとしては、WebAuthnでクレデンシャルの取得を要求する際の `navigator.credentials.get` メソッドを呼び出す際、以下のように`mediation`引数で`conditional`を指定します。
 
