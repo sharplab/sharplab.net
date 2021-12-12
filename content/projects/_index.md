@@ -3,7 +3,7 @@ title: Projects
 linkTitle: Projects
 menu:
   main:
-    weight: 30
+    weight: 110
 layout: docs
 ---
 
