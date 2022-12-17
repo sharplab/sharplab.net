@@ -165,3 +165,19 @@ parseCreationOptionsFromJSONがあれば、当然parseCreationOptionsFromJSONも
 +    AuthenticationExtensionsClientInputsJSON                extensions;
 +};
 ```
+
+### AuthenticatorAssertionResponse
+
+```
+ [SecureContext, Exposed=Window]
+ interface AuthenticatorAssertionResponse : AuthenticatorResponse {
+     [SameObject] readonly attribute ArrayBuffer      authenticatorData;
+     [SameObject] readonly attribute ArrayBuffer      signature; 
+     [SameObject] readonly attribute ArrayBuffer?     userHandle;
++    [SameObject] readonly attribute ArrayBuffer?     attestationObject;
+ };
+```
+
+AuthenticatorAssertionResponseには、attestationObjectフィールドが追加されています。attestationObjectといえば、これまでは登録時のAuthenticatorAttestationResponseに含まれるもので、認証時のAuthenticatorAssertionResponseには含まれないものでしたが、オプションとして含まれるようになりました。Device PublicKey 拡張のPull-Requestで一緒に追加されたようです。
+
+Pull-Request：[device public key extension by equalsJeffH · Pull Request #1663 · w3c/webauthn](https://github.com/w3c/webauthn/pull/1663)
