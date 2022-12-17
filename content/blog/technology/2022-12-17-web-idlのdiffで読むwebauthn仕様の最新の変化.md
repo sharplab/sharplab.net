@@ -181,3 +181,136 @@ parseCreationOptionsFromJSONがあれば、当然parseCreationOptionsFromJSONも
 AuthenticatorAssertionResponseには、attestationObjectフィールドが追加されています。attestationObjectといえば、これまでは登録時のAuthenticatorAttestationResponseに含まれるもので、認証時のAuthenticatorAssertionResponseには含まれないものでしたが、オプションとして含まれるようになりました。Device PublicKey 拡張のPull-Requestで一緒に追加されたようです。
 
 Pull-Request：[device public key extension by equalsJeffH · Pull Request #1663 · w3c/webauthn](https://github.com/w3c/webauthn/pull/1663)
+
+### PublicKeyCredentialCreationOptions
+
+```
+ dictionary PublicKeyCredentialCreationOptions {
+     required PublicKeyCredentialRpEntity         rp;
+     required PublicKeyCredentialUserEntity       user;
+ 
+     required BufferSource                             challenge;
+     required sequence<PublicKeyCredentialParameters>  pubKeyCredParams;
+ 
+     unsigned long                                timeout;
+     sequence<PublicKeyCredentialDescriptor>      excludeCredentials = [];
+     AuthenticatorSelectionCriteria               authenticatorSelection;
+     DOMString                                    attestation = "none";
++    sequence<DOMString>                          attestationFormats = [];
+     AuthenticationExtensionsClientInputs         extensions;
+ };
+```
+
+PublicKeyCredentialCreationOptionsには、attestationFormatsが追加されました。Relying Partyは、望ましい順にAttestation Statementのフォーマットを指定することが出来るようになりました。ということは、CTAP側でも同様の指定が出来るようになったのでしょうか？イマイチ使いどころがよく分からない機能ですが、複数のAttestation Statement Formatに対応するAuthenticatorが今後現れるんでしょうか？色々謎な機能です。
+
+これもDevice PublicKey 拡張のPull-Requestで追加されたようです。
+
+Pull-Request：[device public key extension by equalsJeffH · Pull Request #1663 · w3c/webauthn](https://github.com/w3c/webauthn/pull/1663)
+
+### PublicKeyCredentialRequestOptions
+
+```
+ dictionary PublicKeyCredentialRequestOptions {
+     required BufferSource                challenge;
+     unsigned long                        timeout;
+     USVString                            rpId;
+     sequence<PublicKeyCredentialDescriptor> allowCredentials = [];
+     DOMString                            userVerification = "preferred";
++    DOMString                            attestation = "none";
++    sequence<DOMString>                  attestationFormats = [];
+     AuthenticationExtensionsClientInputs extensions;
+ };
+```
+
+PublicKeyCredentialRequestOptionsには、attestationとattestationFormatsが追加されました。認証時でもAttestationが取得できるようになったので、その関係で追加されたようです。
+
+Pull-Request：[device public key extension by equalsJeffH · Pull Request #1663 · w3c/webauthn](https://github.com/w3c/webauthn/pull/1663)
+
+### CollectedClientData
+
+```
+ dictionary CollectedClientData {
+     required DOMString           type;
+     required DOMString           challenge;
+     required DOMString           origin;
+     boolean                      crossOrigin;
+-    TokenBinding                 tokenBinding;
+ };
+```
+
+CollectedClientDataからは正式にtokenBindingが削除されました。TokenBinding、、てしまったの、勿体ないなぁと今でも感じてしまいます。
+
+### AuthenticatorTransport
+
+```
+ enum AuthenticatorTransport {
+     "usb",
+     "nfc",
+     "ble",
++    "hybrid",
+     "internal"
+ };
+```
+
+AuthenticatorTransportには、hybridという値が追加されています。これは何かというと、元々cable（cloud-assisted-BLE）という名前で推進されていた、スマートフォンをAuthenticatorにし、ログイン先デバイスとクラウド経由で接続しつつ、物理的な近接性はBLEでチェックし担保する方式が"hybrid“という名前にリネームの上、マージされたものです。
+
+### Pseudo-random function拡張
+
+Pseudo-random function拡張が追加され、関連するデータ構造が追加されています。この拡張を使用することで、クレデンシャルから派生した対称鍵を生成し、データの暗号化等に使用することが出来るようです。[詳しくはEditor's Draftの該当箇所をご覧ください。](https://w3c.github.io/webauthn/#prf-extension "https\://w3c.github.io/webauthn/#prf-extension")
+
+```
++dictionary AuthenticationExtensionsPRFValues {
++    required ArrayBuffer first;
++    ArrayBuffer second;
++};
++
++dictionary AuthenticationExtensionsPRFInputs {
++    AuthenticationExtensionsPRFValues eval;
++    record<USVString, AuthenticationExtensionsPRFValues> evalByCredential;
++};
++
++partial dictionary AuthenticationExtensionsClientInputs {
++    AuthenticationExtensionsPRFInputs prf;
++};
++
++dictionary AuthenticationExtensionsPRFOutputs {
++    boolean enabled;
++    AuthenticationExtensionsPRFValues results;
++};
++
++partial dictionary AuthenticationExtensionsClientOutputs {
++    AuthenticationExtensionsPRFOutputs prf;
++};
+```
+
+### Device-bound public key拡張
+
+Device-bound public key拡張が追加され、関連するデータ構造が追加されています。Passkey導入により、クレデンシャルが複数のデバイスにSyncされるようになりましたが、クレデンシャルとは別に、デバイス毎にデバイス識別の為に公開鍵を持たせることで、登録時のデバイスと、認証時のデバイスが同一であるか、等を確認出来るようにする拡張です。
+
+```
++dictionary AuthenticationExtensionsDevicePublicKeyInputs {
++    DOMString attestation = "none";
++    sequence<DOMString> attestationFormats = [];
++};
++
++partial dictionary AuthenticationExtensionsClientInputs {
++    AuthenticationExtensionsDevicePublicKeyInputs devicePubKey;
++};
++
++dictionary AuthenticationExtensionsDevicePublicKeyOutputs {
++    ArrayBuffer authenticatorOutput;
++    ArrayBuffer signature;
++};
++
++partial dictionary AuthenticationExtensionsClientOutputs {
++    AuthenticationExtensionsDevicePublicKeyOutputs devicePubKey;
++};
+```
+
+Pull-Request：[device public key extension by equalsJeffH · Pull Request #1663 · w3c/webauthn](https://github.com/w3c/webauthn/pull/1663)
+
+
+
+### まとめ
+
+以上、Web IDLから分かるWebAuthnの最新の変化でしたが、如何でしたでしょうか。よくよく見てみると、WebAuthnに関するデータ構造でも、Web IDLに現れてこない部分、例えばBEフラグやBSフラグの追加などは抜け落ちてしまっており、完全とはいきませんが、大まかな追加機能については把握できたのではないでしょうか。2022年、WebAuthnでは、Passkey周りが最も大きな変化でしたが、それ以外にも色々継続的な改善が行われています。Passkeyも出てきたし、最近のWebAuthnについて調べなおそうか、という方の一助になったなら幸いです。
